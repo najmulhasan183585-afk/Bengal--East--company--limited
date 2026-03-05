@@ -115,7 +115,7 @@ display:none;
 <button onclick="resetPassword()">Change Password</button>
 
 </div>
-
+<div id="recaptcha-container"></div>
 </div>
 
 <script>
@@ -253,7 +253,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-
+window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
 </script>
 
 </body>
