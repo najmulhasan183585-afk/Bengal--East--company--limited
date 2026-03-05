@@ -1,61 +1,65 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Login Register</title>
-
+<title>Login & Register</title>
 <style>
 body{
-font-family:Arial;
-background:#f5f5f5;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
+    font-family:Arial;
+    background:linear-gradient(135deg,#4facfe,#00f2fe);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
 }
-
 .container{
-width:350px;
-background:white;
-padding:20px;
-border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
+    width:360px;
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.2);
+    text-align:center;
 }
-
+.logo{
+    font-size:60px;
+    margin-bottom:10px;
+}
 .tabs{
-display:flex;
-justify-content:space-around;
-margin-bottom:20px;
+    display:flex;
+    justify-content:space-around;
+    margin-bottom:20px;
 }
-
 .tabs button{
-background:none;
-border:none;
-font-size:18px;
-cursor:pointer;
+    background:none;
+    border:none;
+    font-size:18px;
+    cursor:pointer;
+    font-weight:bold;
+    color:#333;
 }
-
 input{
-width:100%;
-padding:10px;
-margin:8px 0;
-border-radius:5px;
-border:1px solid #ccc;
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border-radius:8px;
+    border:1px solid #ccc;
 }
-
 button.main{
-width:100%;
-padding:12px;
-border:none;
-border-radius:20px;
-background:#f5b400;
-color:white;
-font-size:16px;
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:25px;
+    background:linear-gradient(90deg,#ff8a00,#e52e71);
+    color:white;
+    font-size:16px;
+    cursor:pointer;
 }
-
-.hidden{
-display:none;
+button.main:hover{
+    opacity:0.9;
 }
+.hidden{display:none;}
+p{cursor:pointer;color:#ff8a00;margin-top:10px;}
 </style>
 </head>
 
@@ -63,215 +67,136 @@ display:none;
 
 <div class="container">
 
-<div class="tabs">
-<button onclick="showLogin()">Login</button>
-<button onclick="showRegister()">Register</button>
-</div>
+    <div class="logo">🔐</div>
+    <h2>Secure Login</h2>
 
-<!-- LOGIN -->
-<div id="loginPage">
+    <div class="tabs">
+        <button onclick="showLogin()">Login</button>
+        <button onclick="showRegister()">Register</button>
+    </div>
 
-<input id="loginPhone" placeholder="Phone number">
+    <!-- LOGIN -->
+    <div id="loginPage">
+        <input id="loginPhone" placeholder="Phone number">
+        <input type="password" id="loginPass" placeholder="Password">
+        <button class="main" onclick="loginUser()">Login</button>
+        <p onclick="showReset()">Forgot password?</p>
+    </div>
 
-<input type="password" id="loginPass" placeholder="Password">
+    <!-- REGISTER -->
+    <div id="registerPage" class="hidden">
+        <input id="regPhone" placeholder="Phone number">
+        <input type="password" id="regPass" placeholder="Password">
+        <input type="password" id="regConfirm" placeholder="Confirm Password">
+        <input id="refCode" placeholder="Referral Code">
+        <label>
+            <input type="checkbox" id="agree"> I agree privacy
+        </label>
+        <button class="main" onclick="registerUser()">Register</button>
+    </div>
 
-<button class="main" onclick="loginUser()">Login</button>
-
-<p onclick="showReset()" style="cursor:pointer">Forgot password</p>
-
-</div>
-
-<!-- REGISTER -->
-<div id="registerPage" class="hidden">
-
-<input id="regPhone" placeholder="Phone number">
-
-<input type="password" id="regPass" placeholder="Password">
-
-<input type="password" id="regConfirm" placeholder="Confirm Password">
-
-<input id="refCode" placeholder="Referral Code">
-
-<label>
-<input type="checkbox" id="agree"> I agree privacy
-</label>
-
-<button class="main" onclick="registerUser()">Register</button>
-
-</div>
-
-<!-- RESET PASSWORD -->
-<div id="resetPage" class="hidden">
-
-<input id="resetPhone" placeholder="Phone number">
-
-<button onclick="sendOTP()">Send Code</button>
-
-<div id="recaptcha-container"></div>
-
-<input id="otpInput" placeholder="Enter OTP">
-
-<input type="password" id="newPass" placeholder="New Password">
-
-<button onclick="resetPassword()">Change Password</button>
+    <!-- RESET PASSWORD -->
+    <div id="resetPage" class="hidden">
+        <input id="resetPhone" placeholder="Phone number">
+        <div id="recaptcha-container"></div>
+        <button onclick="sendOTP()">Send Code</button>
+        <input id="otpInput" placeholder="Enter OTP">
+        <input type="password" id="newPass" placeholder="New Password">
+        <button onclick="resetPassword()">Change Password</button>
+    </div>
 
 </div>
-
-</div>
-
-<script>
-
-let otp="";
-
-function showRegister(){
-document.getElementById("loginPage").style.display="none";
-document.getElementById("registerPage").style.display="block";
-document.getElementById("resetPage").style.display="none";
-}
-
-function showLogin(){
-document.getElementById("loginPage").style.display="block";
-document.getElementById("registerPage").style.display="none";
-document.getElementById("resetPage").style.display="none";
-}
-
-function showReset(){
-document.getElementById("loginPage").style.display="none";
-document.getElementById("registerPage").style.display="none";
-document.getElementById("resetPage").style.display="block";
-}
-
-function registerUser(){
-
-let phone=document.getElementById("regPhone").value;
-let pass=document.getElementById("regPass").value;
-let confirm=document.getElementById("regConfirm").value;
-let ref=document.getElementById("refCode").value;
-let agree=document.getElementById("agree").checked;
-
-if(phone.length!=11){
-alert("Phone number must be 11 digits");
-return;
-}
-
-if(pass==""){
-alert("Password required");
-return;
-}
-
-if(confirm==""){
-alert("Confirm password required");
-return;
-}
-
-if(pass!=confirm){
-alert("Password not match");
-return;
-}
-
-if(ref==""){
-alert("Referral code required");
-return;
-}
-
-if(!agree){
-alert("Please agree privacy");
-return;
-}
-
-localStorage.setItem("phone",phone);
-localStorage.setItem("pass",pass);
-
-alert("Registration successful");
-
-showLogin();
-
-}
-
-function loginUser(){
-
-let phone=document.getElementById("loginPhone").value;
-let pass=document.getElementById("loginPass").value;
-
-let savedPhone=localStorage.getItem("phone");
-let savedPass=localStorage.getItem("pass");
-
-if(phone==savedPhone && pass==savedPass){
-alert("Login success");
-}else{
-alert("Wrong phone or password");
-}
-
-}
-
-</script>
 
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+// Firebase config
 const firebaseConfig = {
-  apiKey: "AIzaSyCALYxA2M4BwIXq5KC3VMGsZpAFh8nL3fo",
-  authDomain: "bengal-east-company-limited.firebaseapp.com",
-  projectId: "bengal-east-company-limited",
-  storageBucket: "bengal-east-company-limited.firebasestorage.app",
-  messagingSenderId: "653223286483",
-  appId: "1:653223286483:web:f6c822aa1f22a13cf02626"
+    apiKey: "AIzaSyCALYxA2M4BwIXq5KC3VMGsZpAFh8nL3fo",
+    authDomain: "bengal-east-company-limited.firebaseapp.com",
+    projectId: "bengal-east-company-limited",
+    storageBucket: "bengal-east-company-limited.firebasestorage.app",
+    messagingSenderId: "653223286483",
+    appId: "1:653223286483:web:f6c822aa1f22a13cf02626"
 };
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+// Setup reCAPTCHA
 window.recaptchaVerifier = new RecaptchaVerifier(auth,'recaptcha-container',{
-size:'normal',
-callback:(response)=>{
-console.log("reCAPTCHA solved");
+    size:'normal',
+    callback:(response)=>{ console.log("reCAPTCHA solved"); }
+});
+
+// UI switches
+function showRegister(){document.getElementById("loginPage").style.display="none";document.getElementById("registerPage").style.display="block";document.getElementById("resetPage").style.display="none";}
+function showLogin(){document.getElementById("loginPage").style.display="block";document.getElementById("registerPage").style.display="none";document.getElementById("resetPage").style.display="none";}
+function showReset(){document.getElementById("loginPage").style.display="none";document.getElementById("registerPage").style.display="none";document.getElementById("resetPage").style.display="block";}
+
+// Registration
+function registerUser(){
+    let phone=document.getElementById("regPhone").value;
+    let pass=document.getElementById("regPass").value;
+    let confirm=document.getElementById("regConfirm").value;
+    let ref=document.getElementById("refCode").value;
+    let agree=document.getElementById("agree").checked;
+    let savedPhone=localStorage.getItem("phone");
+
+    if(phone==savedPhone){alert("This phone already registered"); return;}
+    if(phone.length!=11){alert("Phone number must be 11 digits"); return;}
+    if(pass==""){alert("Password required"); return;}
+    if(confirm==""){alert("Confirm password required"); return;}
+    if(pass!=confirm){alert("Password not match"); return;}
+    if(ref==""){alert("Referral code required"); return;}
+    if(!agree){alert("Please agree privacy"); return;}
+
+    localStorage.setItem("phone",phone);
+    localStorage.setItem("pass",pass);
+    alert("Registration successful");
+    location.reload();
 }
-});
 
-window.sendOTP=function(){
+// Login
+function loginUser(){
+    let phone=document.getElementById("loginPhone").value;
+    let pass=document.getElementById("loginPass").value;
+    let savedPhone=localStorage.getItem("phone");
+    let savedPass=localStorage.getItem("pass");
 
-const phoneNumber="+88"+document.getElementById("resetPhone").value;
+    if(phone==savedPhone && pass==savedPass){
+        window.location.href="home.html";
+    }else{
+        alert("Wrong phone or password");
+    }
+}
 
-const appVerifier=window.recaptchaVerifier;
+// Firebase OTP functions
+window.sendOTP = function(){
+    const phoneNumber = "+88"+document.getElementById("resetPhone").value;
+    const appVerifier = window.recaptchaVerifier;
 
-signInWithPhoneNumber(auth,phoneNumber,appVerifier)
-.then((confirmationResult)=>{
-
-window.confirmationResult=confirmationResult;
-
-alert("OTP Sent");
-
-}).catch((error)=>{
-
-alert(error.message);
-
-});
-
+    signInWithPhoneNumber(auth,phoneNumber,appVerifier)
+    .then((confirmationResult)=>{
+        window.confirmationResult=confirmationResult;
+        alert("OTP Sent");
+    }).catch((error)=>{
+        alert(error.message);
+    });
 }
 
 window.resetPassword=function(){
+    let code=document.getElementById("otpInput").value;
+    let newPass=document.getElementById("newPass").value;
 
-let code=document.getElementById("otpInput").value;
-let newPass=document.getElementById("newPass").value;
-
-confirmationResult.confirm(code).then(()=>{
-
-localStorage.setItem("pass",newPass);
-
-alert("Password changed");
-
-showLogin();
-
-}).catch(()=>{
-
-alert("Wrong OTP");
-
-});
-
+    window.confirmationResult.confirm(code).then(()=>{
+        localStorage.setItem("pass",newPass);
+        alert("Password changed");
+        showLogin();
+    }).catch(()=>{
+        alert("Wrong OTP");
+    });
 }
-
 </script>
 
 </body>
