@@ -236,6 +236,23 @@ alert("Password changed");
 showLogin();
 
 }
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCALYxA2M4BwIXq5KC3VMGsZpAFh8nL3fo",
+  authDomain: "bengal-east-company-limited.firebaseapp.com",
+  projectId: "bengal-east-company-limited",
+  storageBucket: "bengal-east-company-limited.firebasestorage.app",
+  messagingSenderId: "653223286483",
+  appId: "1:653223286483:web:f6c822aa1f22a13cf02626",
+  measurementId: "G-BX0NGBBKM0"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
 </script>
 
